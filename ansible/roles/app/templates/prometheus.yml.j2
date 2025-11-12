@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+{% raw %}
+# ✅ Путь к правилам алертов
+rule_files:
+  - '/etc/prometheus/alerts/*.yml'
+
+scrape_configs:
+  - job_name: 'flask'
+    static_configs:
+      - targets: ['web_app:5000']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+# Если node_exporter в контейнере
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node_exporter:9100']  # DNS имя контейнера
+
+  - job_name: 'cadvisor_exporter'
+    static_configs:
+      - targets: ['cadvisor_exporter:8080']  # порт 8080!
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_db:5432']  # Или используй postgres_exporter
+
+  - job_name: 'postgres_exporter'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+
+# Если node_exporter на хосте
+#  - job_name: 'node_exporter'
+#    static_configs:
+#      - targets: ['host.docker.internal:9100']
+
+{% endraw %}

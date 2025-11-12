@@ -1,0 +1,46 @@
+---
+# ========================================
+# MAIN PLAYBOOK
+# ========================================
+- name: Deploy Flask + PostgreSQL + Monitoring + Logging + Backup
+  hosts: aws
+  become: true
+
+  roles:
+    - docker      # Установка Docker
+    - app         # Деплой приложения и мониторинга
+    - loki        # Настройка Loki + Promtail
+    - backup      # Настройка автоматических бэкапов
+
+  post_tasks:
+    - name: Wait for services to start
+      ansible.builtin.pause:
+        seconds: 30
+        prompt: "Waiting for all services to initialize..."
+
+    - name: Check running containers
+      ansible.builtin.command: >
+         {% raw %}docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'{% endraw %}
+      register: docker_ps
+
+    - name: Show container status
+      ansible.builtin.debug:
+        msg: "{{ docker_ps.stdout_lines }}"
+
+    - name: Show service URLs
+      ansible.builtin.debug:
+        msg:
+          - "========================================="
+          - "✅ Deployment completed successfully!"
+          - "========================================="
+          - "Flask App:      http://{{ inventory_hostname }}:{{ flask_port }}"
+          - "Prometheus:     http://{{ inventory_hostname }}:{{ prometheus_port }}"
+          - "Grafana:        http://{{ inventory_hostname }}:{{ grafana_port }} (admin/admin)"
+          - "Alertmanager:   http://{{ inventory_hostname }}:{{ alertmanager_port }}"
+          - "Loki:           http://{{ inventory_hostname }}:{{ loki_port }}"
+          - "========================================="
+          - "📊 Grafana Dashboards to import:"
+          - "  - 11098 (Prometheus Alertmanager)"
+          - "  - 13639 (Loki Dashboard)"
+          - "  - 1860  (Node Exporter Full)"
+          - "========================================="

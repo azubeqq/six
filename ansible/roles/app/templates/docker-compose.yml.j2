@@ -1,0 +1,205 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    image: "{{ flask_image }}"
+    container_name: web_app
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT={{ db_port }}
+      - DATABASE_NAME={{ db_name }}
+      - DATABASE_USER={{ db_user }}
+      - DATABASE_PASSWORD={{ db_password }}
+    depends_on:
+      - db
+#    depends_on:
+#    db:
+#      condition: service_healthy  # Ждёт пока db станет healthy!
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Если healthcheck fails → контейнер перезапустится
+
+  db:
+    image: "{{ postgres_image }}"
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB={{ db_name }}
+      - POSTGRES_USER={{ db_user }}
+      - POSTGRES_PASSWORD={{ db_password }}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ db_user }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: "{{ prometheus_image }}"
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts:/etc/prometheus/alerts:ro  # Добавь!
+    ports:
+      - "9090:9090"
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  grafana:
+    image: "{{ grafana_image }}"
+    container_name: grafana
+    volumes:
+    - ./grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - {{ network_name }}
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3    
+    
+  node_exporter:
+    image: "{{ node_exporter_image }}"
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/host'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9100/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cadvisor_exporter:
+    image: "{{ cadvisor_image }}"
+    container_name: cadvisor_exporter
+    ports:
+      - "8080:8080"  
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - {{ network_name }}
+    restart: always
+
+  alertmanager:
+    image: "{{ alertmanager_image }}"
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+      - alertmanager_data:/alertmanager  # Добавь диск для хранения алертов
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'  # Добавь диск для храниения алертов
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres_exporter:
+    image: "{{ postgresexporter_image }}"
+    container_name: postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://{{ db_user }}:{{ db_password }}@postgres_db:5432/{{ db_name }}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    depends_on:
+      - db
+#          db: condition: service_healthy
+#          restart: true
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9187/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Loki - хранилище логов (аналог Prometheus для логов)
+  loki:
+    image: "{{ loki_image }}"
+    container_name: loki
+    ports:
+      - "{{ loki_port }}:3100"
+    volumes:
+      - ./loki:/etc/loki
+      - loki_data:/loki  # Persistent storage для логов
+    command: -config.file=/etc/loki/loki-config.yml
+    networks:
+      - {{ network_name }}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Promtail - агент для сбора логов (аналог Node Exporter)
+  promtail:
+    image: "{{ promtail_image }}"
+    container_name: promtail
+    volumes:
+      - ./promtail:/etc/promtail
+      - /var/log:/var/log:ro   # Системные логи хоста
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Логи Docker контейнеров
+    command: -config.file=/etc/promtail/promtail-config.yml
+    networks:
+      - {{ network_name }}
+    depends_on:
+      - loki
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  alertmanager_data:  # Добавь диск для хранения алертов
+  grafana_data:
+  prometheus_data:
+  loki_data:
+
+networks:
+  {{ network_name }}:
+    driver: bridge

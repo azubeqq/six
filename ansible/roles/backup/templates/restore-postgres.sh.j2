@@ -1,0 +1,93 @@
+#!/bin/bash
+# ========================================
+# PostgreSQL Restore Script
+# Восстановление БД из бэкапа
+# ========================================
+
+set -e
+
+# Переменные
+BACKUP_DIR="/home/{{ app_user }}/backups"
+CONTAINER_NAME="postgres_db"
+DB_NAME="{{ db_name }}"
+DB_USER="{{ db_user }}"
+
+# Цвета для вывода
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Проверка аргументов
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <backup_file>"
+    echo ""
+    echo "Available backups:"
+    ls -lh ${BACKUP_DIR}/db_backup_*.sql.gz 2>/dev/null || echo "No backups found"
+    exit 1
+fi
+
+BACKUP_FILE=$1
+
+# Проверка существования файла
+if [ ! -f "${BACKUP_FILE}" ]; then
+    echo -e "${RED}ERROR: Backup file not found: ${BACKUP_FILE}${NC}"
+    exit 1
+fi
+
+# Предупреждение
+echo -e "${RED}=========================================${NC}"
+echo -e "${RED}⚠️  WARNING: DATABASE RESTORE${NC}"
+echo -e "${RED}=========================================${NC}"
+echo -e "${YELLOW}This will OVERWRITE the current database!${NC}"
+echo -e "Backup file: ${GREEN}${BACKUP_FILE}${NC}"
+echo -e "Database: ${GREEN}${DB_NAME}${NC}"
+echo ""
+read -p "Are you ABSOLUTELY sure? (type 'yes' to continue): " CONFIRM
+
+if [ "$CONFIRM" != "yes" ]; then
+    echo "Restore cancelled."
+    exit 0
+fi
+
+echo ""
+echo "========================================="
+echo "Starting restore process..."
+echo "========================================="
+
+# Шаг 1: Остановка приложения
+echo "[1/5] Stopping application container..."
+if docker stop web_app 2>/dev/null; then
+    echo -e "${GREEN}✅ Application stopped${NC}"
+else
+    echo -e "${YELLOW}⚠️  Application was not running${NC}"
+fi
+
+# Шаг 2: Дроп существующей БД
+echo "[2/5] Dropping existing database..."
+docker exec ${CONTAINER_NAME} psql -U ${DB_USER} -c "DROP DATABASE IF EXISTS ${DB_NAME};"
+echo -e "${GREEN}✅ Database dropped${NC}"
+
+# Шаг 3: Создание новой БД
+echo "[3/5] Creating new database..."
+docker exec ${CONTAINER_NAME} psql -U ${DB_USER} -c "CREATE DATABASE ${DB_NAME};"
+echo -e "${GREEN}✅ Database created${NC}"
+
+# Шаг 4: Восстановление из бэкапа
+echo "[4/5] Restoring from backup..."
+echo "This may take a while..."
+gunzip -c ${BACKUP_FILE} | docker exec -i ${CONTAINER_NAME} psql -U ${DB_USER} -d ${DB_NAME}
+echo -e "${GREEN}✅ Backup restored${NC}"
+
+# Шаг 5: Запуск приложения
+echo "[5/5] Starting application container..."
+docker start web_app
+echo -e "${GREEN}✅ Application started${NC}"
+
+echo ""
+echo "========================================="
+echo -e "${GREEN}✅ Restore completed successfully!${NC}"
+echo "========================================="
+echo ""
+echo "You can verify the restore by accessing:"
+echo "http://$(hostname -I | awk '{print $1}'):5000"

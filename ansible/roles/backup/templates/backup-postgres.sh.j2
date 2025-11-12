@@ -1,0 +1,83 @@
+#!/bin/bash
+# ========================================
+# PostgreSQL Backup Script
+# Автоматическое резервное копирование
+# ========================================
+
+set -e  # Exit on error
+
+# Переменные
+BACKUP_DIR="/home/{{ app_user }}/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="${BACKUP_DIR}/db_backup_${DATE}.sql.gz"
+CONTAINER_NAME="postgres_db"
+DB_NAME="{{ db_name }}"
+DB_USER="{{ db_user }}"
+RETENTION_DAYS={{ backup_retention_days }}
+
+# Функция логирования
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+}
+
+# Начало
+log "========================================="
+log "Starting PostgreSQL backup"
+log "========================================="
+
+# Проверка что контейнер запущен
+if ! docker ps | grep -q "${CONTAINER_NAME}"; then
+    log "❌ ERROR: PostgreSQL container '${CONTAINER_NAME}' is not running!"
+    exit 1
+fi
+
+log "✅ PostgreSQL container is running"
+
+# Создание директории если не существует
+mkdir -p "${BACKUP_DIR}"
+
+# Создание бэкапа
+log "Creating backup to ${BACKUP_FILE}..."
+if docker exec ${CONTAINER_NAME} pg_dump -U ${DB_USER} ${DB_NAME} | gzip > ${BACKUP_FILE}; then
+    log "✅ Backup created successfully!"
+else
+    log "❌ ERROR: Failed to create backup!"
+    exit 1
+fi
+
+# Проверка что файл создан
+if [ -f "${BACKUP_FILE}" ]; then
+    BACKUP_SIZE=$(du -h ${BACKUP_FILE} | cut -f1)
+    log "📦 Backup size: ${BACKUP_SIZE}"
+else
+    log "❌ ERROR: Backup file was not created!"
+    exit 1
+fi
+
+# Удаление старых бэкапов
+log "Cleaning up old backups (older than ${RETENTION_DAYS} days)..."
+DELETED_COUNT=$(find ${BACKUP_DIR} -name "db_backup_*.sql.gz" -type f -mtime +${RETENTION_DAYS} -print -delete | wc -l)
+if [ ${DELETED_COUNT} -gt 0 ]; then
+    log "🗑️  Deleted ${DELETED_COUNT} old backup(s)"
+else
+    log "ℹ️  No old backups to delete"
+fi
+
+# Подсчёт оставшихся бэкапов
+BACKUP_COUNT=$(find ${BACKUP_DIR} -name "db_backup_*.sql.gz" -type f | wc -l)
+log "📊 Total backups: ${BACKUP_COUNT}"
+
+{% if backup_to_s3 | default(false) %}
+# Копирование на S3 (если включено)
+log "Uploading backup to S3..."
+if aws s3 cp ${BACKUP_FILE} s3://{{ s3_backup_bucket }}/postgres-backups/ --region {{ region | default('eu-central-1') }}; then
+    log "✅ Backup uploaded to S3 successfully!"
+else
+    log "⚠️  WARNING: Failed to upload backup to S3"
+fi
+{% endif %}
+
+log "========================================="
+log "✅ Backup completed successfully!"
+log "========================================="
+exit 0

@@ -1,0 +1,135 @@
+---
+# ========================================
+# ANSIBLE ROLE: APP
+# ========================================
+# Устанавливает Flask приложение + конфиги мониторинга
+
+# --- Создание директории приложения ---
+- name: Create application directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+
+# --- Копирование Flask приложения ---
+- name: Copy Flask app files
+  ansible.builtin.copy:
+    src: app/
+    dest: "{{ app_dir }}/"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: app/Dockerfile
+    dest: "{{ app_dir }}/Dockerfile"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+
+# --- Конфигурация Prometheus ---
+- name: Template prometheus.yml
+  ansible.builtin.template:
+    src: prometheus.yml.j2
+    dest: "{{ app_dir }}/prometheus.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+  notify:
+    - Restart prometheus container
+
+
+# --- Конфигурация Docker Compose ---
+- name: Template docker-compose.yml
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ app_dir }}/docker-compose.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+  notify:
+    - Restart compose stack
+
+# --- Настройка Alertmanager ---
+- name: Create alertmanager directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}/alertmanager"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+
+- name: Template alertmanager.yml
+  ansible.builtin.template:
+    src: alertmanager.yml.j2
+    dest: "{{ app_dir }}/alertmanager/alertmanager.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+
+# --- Настройка Alert Rules ---
+- name: Create alerts directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}/alerts"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+
+- name: Template alert rules
+  ansible.builtin.template:
+    src: alert_rules.yml.j2
+    dest: "{{ app_dir }}/alerts/alert_rules.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+  notify:
+    - Restart prometheus container
+
+# --- Билд и запуск Docker Compose ---
+# Используем community.docker.docker_compose_v2 для современного синтаксиса
+- name: Start Docker Compose stack
+  ansible.builtin.command:
+    cmd: docker-compose up -d
+    chdir: "{{ app_dir }}"
+  register: compose_result
+
+# --- Вывод результата ---
+- name: Show docker-compose output
+  ansible.builtin.debug:
+    var: compose_result
+    verbosity: 1  # Показывается только с -v
+
+# --- Проверка запущенных контейнеров ---
+- name: Wait for containers to be healthy
+  ansible.builtin.pause:
+    seconds: 10
+    prompt: "Waiting for containers to start..."
+
+- name: Check running containers
+  ansible.builtin.command: >
+    {% raw %}docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'{% endraw %}
+  register: docker_ps
+
+- name: Show container status
+  ansible.builtin.debug:
+    msg: "{{ docker_ps.stdout_lines }}"
+
+# --- Финальная проверка доступности ---
+- name: Check Flask application health
+  ansible.builtin.uri:
+    url: "http://localhost:{{ flask_port }}/"
+    status_code: 200
+    timeout: 30
+  register: flask_health
+  retries: 5
+  delay: 10
+  until: flask_health.status == 200
+  ignore_errors: true
+
+- name: Show Flask health check result
+  ansible.builtin.debug:
+    msg: "Flask application is {{ 'UP ✅' if flask_health.status == 200 else 'DOWN ❌' }}"

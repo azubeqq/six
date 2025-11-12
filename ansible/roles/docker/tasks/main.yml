@@ -1,0 +1,19 @@
+---
+# roles/docker/tasks/main.yml
+
+- name: Install Docker engine
+  ansible.builtin.yum:
+    name: docker
+    state: present
+
+- name: Enable and start Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Install docker-compose (standalone binary)
+  ansible.builtin.get_url:
+    url: "{{ docker_compose_binary }}"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'

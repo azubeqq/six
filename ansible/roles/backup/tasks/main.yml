@@ -1,0 +1,89 @@
+---
+# ========================================
+# BACKUP ROLE - PostgreSQL автобэкапы
+# ========================================
+- name: Install cronie package on Amazon Linux 2023
+  ansible.builtin.package:
+    name: cronie
+    state: present
+
+- name: Create backup directory
+  ansible.builtin.file:
+    path: /home/{{ app_user }}/backups
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0750'
+  when: enable_backup | default(true)
+
+- name: Template backup script
+  ansible.builtin.template:
+    src: backup-postgres.sh.j2
+    dest: /home/{{ app_user }}/backup-postgres.sh
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0750'
+  when: enable_backup | default(true)
+
+- name: Template restore script
+  ansible.builtin.template:
+    src: restore-postgres.sh.j2
+    dest: /home/{{ app_user }}/restore-postgres.sh
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0750'
+  when: enable_backup | default(true)
+
+- name: Setup daily backup cron job
+  ansible.builtin.cron:
+    name: "PostgreSQL daily backup"
+    minute: "{{ backup_schedule_minute }}"
+    hour: "{{ backup_schedule_hour }}"
+    user: "{{ app_user }}"
+    job: "/home/{{ app_user }}/backup-postgres.sh >> /home/{{ app_user }}/backups/backup.log 2>&1"
+    state: present
+  when: enable_backup | default(true)
+
+- name: Install AWS CLI for S3 backup (if enabled)
+  ansible.builtin.yum:
+    name: aws-cli
+    state: present
+  when: 
+    - enable_backup | default(true)
+    - backup_to_s3 | default(false)
+
+- name: Create initial test backup
+  ansible.builtin.command:
+    cmd: /home/{{ app_user }}/backup-postgres.sh
+  become: true
+  become_user: "{{ app_user }}"
+  register: initial_backup
+  changed_when: "'Backup created successfully' in initial_backup.stdout"
+  failed_when: false
+  when: enable_backup | default(true)
+
+- name: Show backup result
+  ansible.builtin.debug:
+    msg: "{{ initial_backup.stdout_lines }}"
+  when: 
+    - enable_backup | default(true)
+    - initial_backup.stdout_lines is defined
+
+- name: List created backups
+  ansible.builtin.find:
+    paths: /home/{{ app_user }}/backups
+    patterns: 'db_backup_*.sql.gz'
+  register: backup_files
+  when: enable_backup | default(true)
+
+- name: Show backup files info
+  ansible.builtin.debug:
+    msg:
+      - "✅ Backup system configured"
+      - "Backup directory: /home/{{ app_user }}/backups"
+      - "Schedule: Daily at {{ backup_schedule_hour }}:{{ '%02d'|format(backup_schedule_minute) }}"
+      - "Retention: {{ backup_retention_days }} days"
+      - "Found {{ backup_files.matched }} backup file(s)"
+      - "Manual backup: /home/{{ app_user }}/backup-postgres.sh"
+      - "Restore: /home/{{ app_user }}/restore-postgres.sh <backup_file>"
+  when: enable_backup | default(true)
