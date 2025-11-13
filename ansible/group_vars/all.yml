@@ -51,8 +51,8 @@ enable_backup: true
 loki_retention_days: 7
 
 # Backup configuration
-backup_schedule_hour: 2
-backup_schedule_minute: 0
+backup_schedule_hour: 16
+backup_schedule_minute: 50
 backup_retention_days: 7
 backup_to_s3: false
 

@@ -164,9 +164,9 @@ services:
     image: "{{ loki_image }}"
     container_name: loki
     ports:
-      - "{{ loki_port }}:3100"
+      - "3100:3100"
     volumes:
-      - ./loki:/etc/loki
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki_data:/loki  # Persistent storage для логов
     command: -config.file=/etc/loki/loki-config.yml
     networks:
@@ -182,8 +182,10 @@ services:
   promtail:
     image: "{{ promtail_image }}"
     container_name: promtail
+    ports:
+      - "9080:9080"
     volumes:
-      - ./promtail:/etc/promtail
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
       - /var/log:/var/log:ro   # Системные логи хоста
       - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Логи Docker контейнеров
     command: -config.file=/etc/promtail/promtail-config.yml

@@ -44,13 +44,13 @@
     state: present
   when: enable_backup | default(true)
 
-- name: Install AWS CLI for S3 backup (if enabled)
-  ansible.builtin.yum:
-    name: aws-cli
-    state: present
-  when: 
-    - enable_backup | default(true)
-    - backup_to_s3 | default(false)
+#- name: Install AWS CLI for S3 backup (if enabled)
+#  ansible.builtin.yum:
+#    name: aws-cli
+#    state: present
+#  when: 
+#    - enable_backup | default(true)
+#    - backup_to_s3 | default(false)
 
 - name: Create initial test backup
   ansible.builtin.command:

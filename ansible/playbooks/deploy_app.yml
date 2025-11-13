@@ -43,4 +43,6 @@
           - "  - 11098 (Prometheus Alertmanager)"
           - "  - 13639 (Loki Dashboard)"
           - "  - 1860  (Node Exporter Full)"
+          - "  - 14282 (CAdvisor Exporter)"
+          - "  - 12485 PostgreSQL exporter"
           - "========================================="

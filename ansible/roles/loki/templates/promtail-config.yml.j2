@@ -2,13 +2,13 @@
 # PROMTAIL CONFIGURATION
 # ========================================
 server:
-  http_listen_port: {{ promtail_port }}
+  http_listen_port: "{{ promtail_port }}"
   grpc_listen_port: 0
-
+{% raw %}
 # Куда отправлять логи
 clients:
   - url: http://loki:3100/loki/api/v1/push
-
+expand-env: true
 # Откуда собирать логи
 scrape_configs:
   # Docker контейнеры
@@ -75,3 +75,4 @@ scrape_configs:
           source: timestamp
           format: 'Jan _2 15:04:05'
           location: 'UTC'
+{% endraw %}

@@ -77,3 +77,11 @@ variable "alertmanager_port" {
   type    = number
   default = 9093
 }
+variable "loki_port" {
+  type    = number
+  default = 3100
+}
+variable "promtail_port" {
+  type    = number
+  default = 9080
+}

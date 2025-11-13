@@ -5,7 +5,7 @@
 # Security Group: разрешим SSH + нужные сервисные порты
 resource "aws_security_group" "app_sg" {
   name        = "${var.instance_name}-sg"
-  description = "Allow SSH, Flask, Prometheus, Grafana"
+  description = "Allow SSH, Flask, Prometheus, Grafana, Loki + Promtail"
 
   # SSH
   ingress {
@@ -51,7 +51,15 @@ resource "aws_security_group" "app_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+   # Loki
+  ingress {
+    description = "Loki description"
+    from_port   = var.loki_port
+    to_port     = var.loki_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Разрешаем весь исходящий трафик
   egress {
     description = "Allow all outbound"

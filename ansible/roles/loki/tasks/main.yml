@@ -10,7 +10,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_user }}"
     mode: '0755'
-  when: enable_loki | default(true)
+#  when: enable_loki | default(true)
 
 - name: Template loki config
   ansible.builtin.template:
@@ -19,7 +19,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_user }}"
     mode: '0644'
-  when: enable_loki | default(true)
+#  when: enable_loki | default(true)
 
 - name: Create promtail directory
   ansible.builtin.file:
@@ -28,7 +28,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_user }}"
     mode: '0755'
-  when: enable_loki | default(true)
+#  when: enable_loki | default(true)
 
 - name: Template promtail config
   ansible.builtin.template:
@@ -37,7 +37,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_user }}"
     mode: '0644'
-  when: enable_loki | default(true)
+#  when: enable_loki | default(true)
 
 - name: Show Loki info
   ansible.builtin.debug:
@@ -45,4 +45,4 @@
       - "✅ Loki logging stack configured"
       - "Loki will store logs for {{ loki_retention_days }} days"
       - "Access Loki via Grafana Explore"
-  when: enable_loki | default(true)
+#  when: enable_loki | default(true)
