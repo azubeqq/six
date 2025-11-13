@@ -88,6 +88,41 @@
     mode: '0644'
   notify:
     - Restart prometheus container
+- name: Create loki directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}/loki"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+#  when: enable_loki | default(true)
+
+- name: Template loki config
+  ansible.builtin.template:
+    src: loki-config.yml.j2
+    dest: "{{ app_dir }}/loki/loki-config.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+#  when: enable_loki | default(true)
+
+- name: Create promtail directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}/promtail"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+#  when: enable_loki | default(true)
+
+- name: Template promtail config
+  ansible.builtin.template:
+    src: promtail-config.yml.j2
+    dest: "{{ app_dir }}/promtail/promtail-config.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+#  when: enable_loki | default(true)
 
 # --- Билд и запуск Docker Compose ---
 # Используем community.docker.docker_compose_v2 для современного синтаксиса
