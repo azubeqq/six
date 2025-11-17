@@ -6,7 +6,7 @@ services:
     image: "{{ flask_image }}"
     container_name: web_app
     ports:
-      - "5000:5000"
+      - '{{ flask_port }}:5000'
     environment:
       - DATABASE_HOST=db
       - DATABASE_PORT={{ db_port }}
@@ -37,7 +37,7 @@ services:
       - POSTGRES_USER={{ db_user }}
       - POSTGRES_PASSWORD={{ db_password }}
     ports:
-      - "5432:5432"
+      - '{{ db_port }}:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -56,7 +56,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./alerts:/etc/prometheus/alerts:ro  # Добавь!
     ports:
-      - "9090:9090"
+      - '{{ prometheus_port }}:9090'
     networks:
       - {{ network_name }}
     restart: unless-stopped
@@ -72,7 +72,7 @@ services:
     volumes:
     - ./grafana/provisioning:/etc/grafana/provisioning
     ports:
-      - "3000:3000"
+      - '{{ grafana_port }}:3000'
     networks:
       - {{ network_name }}
     depends_on:
@@ -87,7 +87,7 @@ services:
     image: "{{ node_exporter_image }}"
     container_name: node_exporter
     ports:
-      - "9100:9100"
+      - '{{ node_exporter_port }}:9100'
     command:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
@@ -109,7 +109,7 @@ services:
     image: "{{ cadvisor_image }}"
     container_name: cadvisor_exporter
     ports:
-      - "8080:8080"  
+      - '{{ cadvisor_port }}:8080'  
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -123,7 +123,7 @@ services:
     image: "{{ alertmanager_image }}"
     container_name: alertmanager
     ports:
-      - "9093:9093"
+      - '{{ alertmanager_port }}:9093'
     volumes:
       - ./alertmanager:/etc/alertmanager
       - alertmanager_data:/alertmanager  # Добавь диск для хранения алертов
@@ -145,7 +145,7 @@ services:
     environment:
       DATA_SOURCE_NAME: "postgresql://{{ db_user }}:{{ db_password }}@postgres_db:5432/{{ db_name }}?sslmode=disable"
     ports:
-      - "9187:9187"
+      - '{{ postgres_exporter_port }}:9187'
     networks:
       - {{ network_name }}
     restart: unless-stopped
@@ -164,7 +164,7 @@ services:
     image: "{{ loki_image }}"
     container_name: loki
     ports:
-      - "3100:3100"
+      - '{{ loki_port }}:3100'
     volumes:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki_data:/loki  # Persistent storage для логов
@@ -183,9 +183,10 @@ services:
     image: "{{ promtail_image }}"
     container_name: promtail
     ports:
-      - "9080:9080"
+      - '{{ promtail_port }}:9080'
     volumes:
       - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - ./promtail/positions:/positions  # ← Добавь writeable volume
       - /var/log:/var/log:ro   # Системные логи хоста
       - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Логи Docker контейнеров
     command: -config.file=/etc/promtail/promtail-config.yml
@@ -194,6 +195,11 @@ services:
     depends_on:
       - loki
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9080/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   db_data:

@@ -5908,3 +5908,808 @@ Waiting for all services to initialize...:
   - =========================================
 2025-11-13 20:41:51,914 p=11563 u=zubeq n=ansible | PLAY RECAP ****************************************************************************************************
 2025-11-13 20:41:51,914 p=11563 u=zubeq n=ansible | 18.185.108.245             : ok=39   changed=16   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-11-14 17:56:05,849 p=5316 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] ******************************
+2025-11-14 17:56:05,859 p=5316 u=zubeq n=ansible | TASK [Gathering Facts] ************************************************************************
+2025-11-14 17:56:11,445 p=5316 u=zubeq n=ansible | [WARNING]: Platform linux on host 63.180.55.165 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-
+core/2.16/reference_appendices/interpreter_discovery.html for more information.
+
+2025-11-14 17:56:11,445 p=5316 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:56:11,453 p=5316 u=zubeq n=ansible | TASK [docker : Install Docker engine] *********************************************************
+2025-11-14 17:56:59,314 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:56:59,318 p=5316 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] ***********************************************
+2025-11-14 17:57:04,385 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:04,391 p=5316 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ************************************
+2025-11-14 17:57:07,718 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:07,727 p=5316 u=zubeq n=ansible | TASK [app : Create application directory] *****************************************************
+2025-11-14 17:57:09,966 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:09,973 p=5316 u=zubeq n=ansible | TASK [app : Copy Flask app files] *************************************************************
+2025-11-14 17:57:22,711 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:22,716 p=5316 u=zubeq n=ansible | TASK [app : Copy Dockerfile] ******************************************************************
+2025-11-14 17:57:25,815 p=5316 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:57:25,828 p=5316 u=zubeq n=ansible | TASK [app : Template prometheus.yml] **********************************************************
+2025-11-14 17:57:29,832 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:29,839 p=5316 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] ******************************************************
+2025-11-14 17:57:33,945 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:33,952 p=5316 u=zubeq n=ansible | TASK [app : Create alertmanager directory] ****************************************************
+2025-11-14 17:57:35,734 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:35,740 p=5316 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ********************************************************
+2025-11-14 17:57:39,962 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:39,966 p=5316 u=zubeq n=ansible | TASK [app : Create alerts directory] **********************************************************
+2025-11-14 17:57:41,856 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:41,861 p=5316 u=zubeq n=ansible | TASK [app : Template alert rules] *************************************************************
+2025-11-14 17:57:46,313 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:46,318 p=5316 u=zubeq n=ansible | TASK [app : Create loki directory] ************************************************************
+2025-11-14 17:57:49,099 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:49,103 p=5316 u=zubeq n=ansible | TASK [app : Template loki config] *************************************************************
+2025-11-14 17:57:53,781 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:53,787 p=5316 u=zubeq n=ansible | TASK [app : Create promtail directory] ********************************************************
+2025-11-14 17:57:56,101 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:57:56,108 p=5316 u=zubeq n=ansible | TASK [app : Template promtail config] *********************************************************
+2025-11-14 17:58:01,444 p=5316 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 17:58:01,452 p=5316 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] *******************************************************
+2025-11-14 17:58:03,515 p=5316 u=zubeq n=ansible | fatal: [63.180.55.165]: FAILED! => changed=true 
+  cmd:
+  - docker-compose
+  - up
+  - -d
+  delta: '0:00:00.042694'
+  end: '2025-11-14 15:58:03.322696'
+  msg: non-zero return code
+  rc: 15
+  start: '2025-11-14 15:58:03.280002'
+  stderr: 'invalid hostPort: 50005000'
+  stderr_lines: <omitted>
+  stdout: ''
+  stdout_lines: <omitted>
+2025-11-14 17:58:03,517 p=5316 u=zubeq n=ansible | PLAY RECAP ************************************************************************************
+2025-11-14 17:58:03,517 p=5316 u=zubeq n=ansible | 63.180.55.165              : ok=17   changed=15   unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-11-14 17:59:30,379 p=5579 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] ******************************
+2025-11-14 17:59:30,386 p=5579 u=zubeq n=ansible | TASK [Gathering Facts] ************************************************************************
+2025-11-14 17:59:34,279 p=5579 u=zubeq n=ansible | [WARNING]: Platform linux on host 63.180.55.165 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-
+core/2.16/reference_appendices/interpreter_discovery.html for more information.
+
+2025-11-14 17:59:34,279 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:34,289 p=5579 u=zubeq n=ansible | TASK [docker : Install Docker engine] *********************************************************
+2025-11-14 17:59:36,930 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:36,936 p=5579 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] ***********************************************
+2025-11-14 17:59:39,648 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:39,651 p=5579 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ************************************
+2025-11-14 17:59:42,035 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:42,042 p=5579 u=zubeq n=ansible | TASK [app : Create application directory] *****************************************************
+2025-11-14 17:59:43,689 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:43,695 p=5579 u=zubeq n=ansible | TASK [app : Copy Flask app files] *************************************************************
+2025-11-14 17:59:53,011 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:53,018 p=5579 u=zubeq n=ansible | TASK [app : Copy Dockerfile] ******************************************************************
+2025-11-14 17:59:56,053 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:56,061 p=5579 u=zubeq n=ansible | TASK [app : Template prometheus.yml] **********************************************************
+2025-11-14 17:59:59,264 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 17:59:59,270 p=5579 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] ******************************************************
+2025-11-14 18:00:04,151 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:00:04,157 p=5579 u=zubeq n=ansible | TASK [app : Create alertmanager directory] ****************************************************
+2025-11-14 18:00:06,428 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:06,434 p=5579 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ********************************************************
+2025-11-14 18:00:09,590 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:09,598 p=5579 u=zubeq n=ansible | TASK [app : Create alerts directory] **********************************************************
+2025-11-14 18:00:11,255 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:11,263 p=5579 u=zubeq n=ansible | TASK [app : Template alert rules] *************************************************************
+2025-11-14 18:00:14,862 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:14,868 p=5579 u=zubeq n=ansible | TASK [app : Create loki directory] ************************************************************
+2025-11-14 18:00:16,736 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:16,741 p=5579 u=zubeq n=ansible | TASK [app : Template loki config] *************************************************************
+2025-11-14 18:00:20,039 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:20,043 p=5579 u=zubeq n=ansible | TASK [app : Create promtail directory] ********************************************************
+2025-11-14 18:00:22,080 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:22,084 p=5579 u=zubeq n=ansible | TASK [app : Template promtail config] *********************************************************
+2025-11-14 18:00:25,625 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:00:25,630 p=5579 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] *******************************************************
+2025-11-14 18:01:03,282 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:03,291 p=5579 u=zubeq n=ansible | TASK [app : Show docker-compose output] *******************************************************
+2025-11-14 18:01:03,302 p=5579 u=zubeq n=ansible | skipping: [63.180.55.165]
+2025-11-14 18:01:03,306 p=5579 u=zubeq n=ansible | TASK [app : Wait for containers to be healthy] ************************************************
+2025-11-14 18:01:03,315 p=5579 u=zubeq n=ansible | Pausing for 10 seconds
+2025-11-14 18:01:03,316 p=5579 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 18:01:03,316 p=5579 u=zubeq n=ansible | [app : Wait for containers to be healthy]
+Waiting for containers to start...:
+2025-11-14 18:01:13,323 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:01:13,330 p=5579 u=zubeq n=ansible | TASK [app : Check running containers] *********************************************************
+2025-11-14 18:01:16,047 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:16,054 p=5579 u=zubeq n=ansible | TASK [app : Show container status] ************************************************************
+2025-11-14 18:01:16,067 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg:
+  - NAMES               STATUS                             PORTS
+  - 'grafana             Up 13 seconds (health: starting)   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp'
+  - 'postgres_exporter   Up 13 seconds (health: starting)   0.0.0.0:9187->9187/tcp, :::9187->9187/tcp'
+  - 'web_app             Up 13 seconds (health: starting)   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp'
+  - promtail            Up 13 seconds                      0.0.0.0:9080->9080/tcp, :::9080->9080/tcp
+  - postgres_db         Up 15 seconds (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+  - 'prometheus          Up 15 seconds (health: starting)   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp'
+  - 'loki                Up 15 seconds (health: starting)   0.0.0.0:3100->3100/tcp, :::3100->3100/tcp'
+  - 'alertmanager        Up 15 seconds (health: starting)   0.0.0.0:9093->9093/tcp, :::9093->9093/tcp'
+  - 'cadvisor_exporter   Up 15 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp'
+  - 'node_exporter       Up 15 seconds (health: starting)   0.0.0.0:9100->9100/tcp, :::9100->9100/tcp'
+2025-11-14 18:01:16,073 p=5579 u=zubeq n=ansible | TASK [app : Check Flask application health] ***************************************************
+2025-11-14 18:01:18,734 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:01:18,738 p=5579 u=zubeq n=ansible | TASK [app : Show Flask health check result] ***************************************************
+2025-11-14 18:01:18,751 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg: Flask application is UP ✅
+2025-11-14 18:01:18,758 p=5579 u=zubeq n=ansible | TASK [loki : Show Loki info] ******************************************************************
+2025-11-14 18:01:18,771 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg:
+  - ✅ Loki logging stack configured
+  - Loki will store logs for 7 days
+  - Access Loki via Grafana Explore
+2025-11-14 18:01:18,780 p=5579 u=zubeq n=ansible | TASK [backup : Install cronie package on Amazon Linux 2023] ***********************************
+2025-11-14 18:01:24,346 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:24,353 p=5579 u=zubeq n=ansible | TASK [backup : Create backup directory] *******************************************************
+2025-11-14 18:01:26,297 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:26,304 p=5579 u=zubeq n=ansible | TASK [backup : Template backup script] ********************************************************
+2025-11-14 18:01:29,894 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:29,900 p=5579 u=zubeq n=ansible | TASK [backup : Template restore script] *******************************************************
+2025-11-14 18:01:34,605 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:34,610 p=5579 u=zubeq n=ansible | TASK [backup : Setup daily backup cron job] ***************************************************
+2025-11-14 18:01:36,944 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:36,951 p=5579 u=zubeq n=ansible | TASK [backup : Create initial test backup] ****************************************************
+2025-11-14 18:01:39,320 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:01:39,327 p=5579 u=zubeq n=ansible | TASK [backup : Show backup result] ************************************************************
+2025-11-14 18:01:39,362 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg:
+  - '[2025-11-14 16:01:38] ========================================='
+  - '[2025-11-14 16:01:38] Starting PostgreSQL backup'
+  - '[2025-11-14 16:01:38] ========================================='
+  - '[2025-11-14 16:01:38] ❌ ERROR: PostgreSQL container ''postgres_db'' is not running!'
+2025-11-14 18:01:39,366 p=5579 u=zubeq n=ansible | TASK [backup : List created backups] **********************************************************
+2025-11-14 18:01:41,679 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:01:41,685 p=5579 u=zubeq n=ansible | TASK [backup : Show backup files info] ********************************************************
+2025-11-14 18:01:41,718 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg:
+  - ✅ Backup system configured
+  - 'Backup directory: /home/ec2-user/backups'
+  - 'Schedule: Daily at 16:50'
+  - 'Retention: 7 days'
+  - Found 0 backup file(s)
+  - 'Manual backup: /home/ec2-user/backup-postgres.sh'
+  - 'Restore: /home/ec2-user/restore-postgres.sh <backup_file>'
+2025-11-14 18:01:41,732 p=5579 u=zubeq n=ansible | RUNNING HANDLER [app : Restart compose stack] *************************************************
+2025-11-14 18:01:58,417 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:01:58,423 p=5579 u=zubeq n=ansible | TASK [Wait for services to start] *************************************************************
+2025-11-14 18:01:58,433 p=5579 u=zubeq n=ansible | Pausing for 30 seconds
+2025-11-14 18:01:58,433 p=5579 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 18:01:58,434 p=5579 u=zubeq n=ansible | [Wait for services to start]
+Waiting for all services to initialize...:
+2025-11-14 18:02:28,441 p=5579 u=zubeq n=ansible | ok: [63.180.55.165]
+2025-11-14 18:02:28,447 p=5579 u=zubeq n=ansible | TASK [Check running containers] ***************************************************************
+2025-11-14 18:02:32,810 p=5579 u=zubeq n=ansible | changed: [63.180.55.165]
+2025-11-14 18:02:32,816 p=5579 u=zubeq n=ansible | TASK [Show container status] ******************************************************************
+2025-11-14 18:02:32,830 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg: []
+2025-11-14 18:02:32,833 p=5579 u=zubeq n=ansible | TASK [Show service URLs] **********************************************************************
+2025-11-14 18:02:32,848 p=5579 u=zubeq n=ansible | ok: [63.180.55.165] => 
+  msg:
+  - =========================================
+  - ✅ Deployment completed successfully!
+  - =========================================
+  - 'Flask App:      http://63.180.55.165:5000'
+  - 'Prometheus:     http://63.180.55.165:9090'
+  - 'Grafana:        http://63.180.55.165:3000 (admin/admin)'
+  - 'Alertmanager:   http://63.180.55.165:9093'
+  - 'Loki:           http://63.180.55.165:3100'
+  - =========================================
+  - "\U0001F4CA Grafana Dashboards to import:"
+  - '  - 11098 (Prometheus Alertmanager)'
+  - '  - 13639 (Loki Dashboard)'
+  - '  - 1860  (Node Exporter Full)'
+  - '  - 14282 (CAdvisor Exporter)'
+  - '  - 12485 PostgreSQL exporter'
+  - =========================================
+2025-11-14 18:02:32,855 p=5579 u=zubeq n=ansible | PLAY RECAP ************************************************************************************
+2025-11-14 18:02:32,855 p=5579 u=zubeq n=ansible | 63.180.55.165              : ok=38   changed=10   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-11-14 21:13:02,848 p=9386 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] *********************************************
+2025-11-14 21:13:02,856 p=9386 u=zubeq n=ansible | TASK [Gathering Facts] ***************************************************************************************
+2025-11-14 21:13:08,314 p=9386 u=zubeq n=ansible | [WARNING]: Platform linux on host 3.127.255.249 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the meaning of that
+path. See https://docs.ansible.com/ansible-core/2.16/reference_appendices/interpreter_discovery.html for more
+information.
+
+2025-11-14 21:13:08,314 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:13:08,324 p=9386 u=zubeq n=ansible | TASK [docker : Install Docker engine] ************************************************************************
+2025-11-14 21:13:53,650 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:13:53,656 p=9386 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] **************************************************************
+2025-11-14 21:13:58,318 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:13:58,323 p=9386 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ***************************************************
+2025-11-14 21:14:03,294 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:03,303 p=9386 u=zubeq n=ansible | TASK [app : Create application directory] ********************************************************************
+2025-11-14 21:14:05,376 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:05,383 p=9386 u=zubeq n=ansible | TASK [app : Copy Flask app files] ****************************************************************************
+2025-11-14 21:14:15,383 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:15,388 p=9386 u=zubeq n=ansible | TASK [app : Copy Dockerfile] *********************************************************************************
+2025-11-14 21:14:18,470 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:14:18,478 p=9386 u=zubeq n=ansible | TASK [app : Template prometheus.yml] *************************************************************************
+2025-11-14 21:14:22,721 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:22,726 p=9386 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] *********************************************************************
+2025-11-14 21:14:32,098 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:32,102 p=9386 u=zubeq n=ansible | TASK [app : Create alertmanager directory] *******************************************************************
+2025-11-14 21:14:35,123 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:35,128 p=9386 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ***********************************************************************
+2025-11-14 21:14:40,061 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:40,065 p=9386 u=zubeq n=ansible | TASK [app : Create alerts directory] *************************************************************************
+2025-11-14 21:14:44,683 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:44,690 p=9386 u=zubeq n=ansible | TASK [app : Template alert rules] ****************************************************************************
+2025-11-14 21:14:48,812 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:48,816 p=9386 u=zubeq n=ansible | TASK [app : Create loki directory] ***************************************************************************
+2025-11-14 21:14:50,757 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:50,766 p=9386 u=zubeq n=ansible | TASK [app : Template loki config] ****************************************************************************
+2025-11-14 21:14:55,657 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:55,662 p=9386 u=zubeq n=ansible | TASK [app : Create promtail directory] ***********************************************************************
+2025-11-14 21:14:57,690 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:14:57,696 p=9386 u=zubeq n=ansible | TASK [app : Template promtail config] ************************************************************************
+2025-11-14 21:15:01,062 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:15:01,069 p=9386 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] **********************************************************************
+2025-11-14 21:15:40,101 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:15:40,107 p=9386 u=zubeq n=ansible | TASK [app : Show docker-compose output] **********************************************************************
+2025-11-14 21:15:40,118 p=9386 u=zubeq n=ansible | skipping: [3.127.255.249]
+2025-11-14 21:15:40,123 p=9386 u=zubeq n=ansible | TASK [app : Wait for containers to be healthy] ***************************************************************
+2025-11-14 21:15:40,133 p=9386 u=zubeq n=ansible | Pausing for 10 seconds
+2025-11-14 21:15:40,133 p=9386 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 21:15:40,133 p=9386 u=zubeq n=ansible | [app : Wait for containers to be healthy]
+Waiting for containers to start...:
+2025-11-14 21:15:50,140 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:15:50,146 p=9386 u=zubeq n=ansible | TASK [app : Check running containers] ************************************************************************
+2025-11-14 21:15:53,959 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:15:53,967 p=9386 u=zubeq n=ansible | TASK [app : Show container status] ***************************************************************************
+2025-11-14 21:15:53,980 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - NAMES               STATUS                             PORTS
+  - 'postgres_exporter   Up 14 seconds (health: starting)   0.0.0.0:9187->9187/tcp, :::9187->9187/tcp'
+  - 'grafana             Up 15 seconds (health: starting)   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp'
+  - 'web_app             Up 14 seconds (health: starting)   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp'
+  - 'promtail            Up 14 seconds (health: starting)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp'
+  - 'alertmanager        Up 16 seconds (health: starting)   0.0.0.0:9093->9093/tcp, :::9093->9093/tcp'
+  - 'prometheus          Up 16 seconds (health: starting)   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp'
+  - 'cadvisor_exporter   Up 16 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp'
+  - 'loki                Restarting (1) 2 seconds ago       '
+  - 'node_exporter       Up 16 seconds (health: starting)   0.0.0.0:9100->9100/tcp, :::9100->9100/tcp'
+  - postgres_db         Up 16 seconds (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+2025-11-14 21:15:53,984 p=9386 u=zubeq n=ansible | TASK [app : Check Flask application health] ******************************************************************
+2025-11-14 21:15:56,764 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:15:56,770 p=9386 u=zubeq n=ansible | TASK [app : Show Flask health check result] ******************************************************************
+2025-11-14 21:15:56,784 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg: Flask application is UP ✅
+2025-11-14 21:15:56,791 p=9386 u=zubeq n=ansible | TASK [loki : Show Loki info] *********************************************************************************
+2025-11-14 21:15:56,804 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - ✅ Loki logging stack configured
+  - Loki will store logs for 7 days
+  - Access Loki via Grafana Explore
+2025-11-14 21:15:56,813 p=9386 u=zubeq n=ansible | TASK [backup : Install cronie package on Amazon Linux 2023] **************************************************
+2025-11-14 21:16:03,666 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:03,672 p=9386 u=zubeq n=ansible | TASK [backup : Create backup directory] **********************************************************************
+2025-11-14 21:16:05,972 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:05,979 p=9386 u=zubeq n=ansible | TASK [backup : Template backup script] ***********************************************************************
+2025-11-14 21:16:11,768 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:11,775 p=9386 u=zubeq n=ansible | TASK [backup : Template restore script] **********************************************************************
+2025-11-14 21:16:17,798 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:17,803 p=9386 u=zubeq n=ansible | TASK [backup : Setup daily backup cron job] ******************************************************************
+2025-11-14 21:16:20,313 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:20,318 p=9386 u=zubeq n=ansible | TASK [backup : Create initial test backup] *******************************************************************
+2025-11-14 21:16:26,676 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:16:26,681 p=9386 u=zubeq n=ansible | TASK [backup : Show backup result] ***************************************************************************
+2025-11-14 21:16:26,714 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - '[2025-11-14 19:16:26] ========================================='
+  - '[2025-11-14 19:16:26] Starting PostgreSQL backup'
+  - '[2025-11-14 19:16:26] ========================================='
+  - '[2025-11-14 19:16:26] ❌ ERROR: PostgreSQL container ''postgres_db'' is not running!'
+2025-11-14 21:16:26,717 p=9386 u=zubeq n=ansible | TASK [backup : List created backups] *************************************************************************
+2025-11-14 21:16:32,395 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:16:32,401 p=9386 u=zubeq n=ansible | TASK [backup : Show backup files info] ***********************************************************************
+2025-11-14 21:16:32,435 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - ✅ Backup system configured
+  - 'Backup directory: /home/ec2-user/backups'
+  - 'Schedule: Daily at 16:50'
+  - 'Retention: 7 days'
+  - Found 0 backup file(s)
+  - 'Manual backup: /home/ec2-user/backup-postgres.sh'
+  - 'Restore: /home/ec2-user/restore-postgres.sh <backup_file>'
+2025-11-14 21:16:32,448 p=9386 u=zubeq n=ansible | RUNNING HANDLER [app : Restart prometheus container] *********************************************************
+2025-11-14 21:16:39,349 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:39,356 p=9386 u=zubeq n=ansible | RUNNING HANDLER [app : Restart compose stack] ****************************************************************
+2025-11-14 21:16:56,299 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:16:56,305 p=9386 u=zubeq n=ansible | TASK [Wait for services to start] ****************************************************************************
+2025-11-14 21:16:56,316 p=9386 u=zubeq n=ansible | Pausing for 30 seconds
+2025-11-14 21:16:56,316 p=9386 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 21:16:56,316 p=9386 u=zubeq n=ansible | [Wait for services to start]
+Waiting for all services to initialize...:
+2025-11-14 21:17:26,323 p=9386 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:17:26,331 p=9386 u=zubeq n=ansible | TASK [Check running containers] ******************************************************************************
+2025-11-14 21:17:48,125 p=9386 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:17:48,128 p=9386 u=zubeq n=ansible | TASK [Show container status] *********************************************************************************
+2025-11-14 21:17:48,143 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - NAMES     STATUS    PORTS
+2025-11-14 21:17:48,146 p=9386 u=zubeq n=ansible | TASK [Show service URLs] *************************************************************************************
+2025-11-14 21:17:48,161 p=9386 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - =========================================
+  - ✅ Deployment completed successfully!
+  - =========================================
+  - 'Flask App:      http://3.127.255.249:5000'
+  - 'Prometheus:     http://3.127.255.249:9090'
+  - 'Grafana:        http://3.127.255.249:3000 (admin/admin)'
+  - 'Alertmanager:   http://3.127.255.249:9093'
+  - 'Loki:           http://3.127.255.249:3100'
+  - =========================================
+  - "\U0001F4CA Grafana Dashboards to import:"
+  - '  - 11098 (Prometheus Alertmanager)'
+  - '  - 13639 (Loki Dashboard)'
+  - '  - 1860  (Node Exporter Full)'
+  - '  - 14282 (CAdvisor Exporter)'
+  - '  - 12485 PostgreSQL exporter'
+  - =========================================
+2025-11-14 21:17:48,166 p=9386 u=zubeq n=ansible | PLAY RECAP ***************************************************************************************************
+2025-11-14 21:17:48,166 p=9386 u=zubeq n=ansible | 3.127.255.249              : ok=39   changed=25   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-11-14 21:20:17,071 p=9825 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] *********************************************
+2025-11-14 21:20:17,078 p=9825 u=zubeq n=ansible | TASK [Gathering Facts] ***************************************************************************************
+2025-11-14 21:20:22,081 p=9825 u=zubeq n=ansible | [WARNING]: Platform linux on host 3.127.255.249 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the meaning of that
+path. See https://docs.ansible.com/ansible-core/2.16/reference_appendices/interpreter_discovery.html for more
+information.
+
+2025-11-14 21:20:22,081 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:22,093 p=9825 u=zubeq n=ansible | TASK [docker : Install Docker engine] ************************************************************************
+2025-11-14 21:20:25,566 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:25,572 p=9825 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] **************************************************************
+2025-11-14 21:20:28,524 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:28,529 p=9825 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ***************************************************
+2025-11-14 21:20:31,392 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:31,402 p=9825 u=zubeq n=ansible | TASK [app : Create application directory] ********************************************************************
+2025-11-14 21:20:33,533 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:33,538 p=9825 u=zubeq n=ansible | TASK [app : Copy Flask app files] ****************************************************************************
+2025-11-14 21:20:42,419 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:42,426 p=9825 u=zubeq n=ansible | TASK [app : Copy Dockerfile] *********************************************************************************
+2025-11-14 21:20:45,659 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:45,666 p=9825 u=zubeq n=ansible | TASK [app : Template prometheus.yml] *************************************************************************
+2025-11-14 21:20:48,823 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:48,830 p=9825 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] *********************************************************************
+2025-11-14 21:20:52,059 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:52,063 p=9825 u=zubeq n=ansible | TASK [app : Create alertmanager directory] *******************************************************************
+2025-11-14 21:20:54,028 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:54,035 p=9825 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ***********************************************************************
+2025-11-14 21:20:57,015 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:57,021 p=9825 u=zubeq n=ansible | TASK [app : Create alerts directory] *************************************************************************
+2025-11-14 21:20:59,053 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:20:59,062 p=9825 u=zubeq n=ansible | TASK [app : Template alert rules] ****************************************************************************
+2025-11-14 21:21:02,854 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:21:02,862 p=9825 u=zubeq n=ansible | TASK [app : Create loki directory] ***************************************************************************
+2025-11-14 21:21:04,896 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:21:04,901 p=9825 u=zubeq n=ansible | TASK [app : Template loki config] ****************************************************************************
+2025-11-14 21:21:09,050 p=9825 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:21:09,059 p=9825 u=zubeq n=ansible | TASK [app : Create promtail directory] ***********************************************************************
+2025-11-14 21:21:22,118 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:21:22,125 p=9825 u=zubeq n=ansible | TASK [app : Template promtail config] ************************************************************************
+2025-11-14 21:21:26,061 p=9825 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:21:26,068 p=9825 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] **********************************************************************
+2025-11-14 21:21:32,033 p=9825 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:21:32,039 p=9825 u=zubeq n=ansible | TASK [app : Show docker-compose output] **********************************************************************
+2025-11-14 21:21:32,051 p=9825 u=zubeq n=ansible | skipping: [3.127.255.249]
+2025-11-14 21:21:32,055 p=9825 u=zubeq n=ansible | TASK [app : Wait for containers to be healthy] ***************************************************************
+2025-11-14 21:21:32,065 p=9825 u=zubeq n=ansible | Pausing for 10 seconds
+2025-11-14 21:21:32,065 p=9825 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 21:21:32,065 p=9825 u=zubeq n=ansible | [app : Wait for containers to be healthy]
+Waiting for containers to start...:
+2025-11-14 21:21:42,071 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:21:42,078 p=9825 u=zubeq n=ansible | TASK [app : Check running containers] ************************************************************************
+2025-11-14 21:21:51,634 p=9825 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:21:51,639 p=9825 u=zubeq n=ansible | TASK [app : Show container status] ***************************************************************************
+2025-11-14 21:21:51,653 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - NAMES               STATUS                             PORTS
+  - 'grafana             Up 20 seconds (health: starting)   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp'
+  - 'postgres_exporter   Up 19 seconds (health: starting)   0.0.0.0:9187->9187/tcp, :::9187->9187/tcp'
+  - 'promtail            Up 20 seconds (health: starting)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp'
+  - 'web_app             Up 20 seconds (health: starting)   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp'
+  - 'loki                Up 21 seconds (health: starting)   0.0.0.0:3100->3100/tcp, :::3100->3100/tcp'
+  - 'node_exporter       Up 21 seconds (health: starting)   0.0.0.0:9100->9100/tcp, :::9100->9100/tcp'
+  - 'alertmanager        Up 21 seconds (health: starting)   0.0.0.0:9093->9093/tcp, :::9093->9093/tcp'
+  - 'cadvisor_exporter   Up 21 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp'
+  - postgres_db         Up 21 seconds (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+  - 'prometheus          Up 21 seconds (health: starting)   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp'
+2025-11-14 21:21:51,658 p=9825 u=zubeq n=ansible | TASK [app : Check Flask application health] ******************************************************************
+2025-11-14 21:21:56,238 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:21:56,244 p=9825 u=zubeq n=ansible | TASK [app : Show Flask health check result] ******************************************************************
+2025-11-14 21:21:56,257 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg: Flask application is UP ✅
+2025-11-14 21:21:56,265 p=9825 u=zubeq n=ansible | TASK [loki : Show Loki info] *********************************************************************************
+2025-11-14 21:21:56,278 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - ✅ Loki logging stack configured
+  - Loki will store logs for 7 days
+  - Access Loki via Grafana Explore
+2025-11-14 21:21:56,287 p=9825 u=zubeq n=ansible | TASK [backup : Install cronie package on Amazon Linux 2023] **************************************************
+2025-11-14 21:22:04,670 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:04,677 p=9825 u=zubeq n=ansible | TASK [backup : Create backup directory] **********************************************************************
+2025-11-14 21:22:06,943 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:06,949 p=9825 u=zubeq n=ansible | TASK [backup : Template backup script] ***********************************************************************
+2025-11-14 21:22:12,138 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:12,143 p=9825 u=zubeq n=ansible | TASK [backup : Template restore script] **********************************************************************
+2025-11-14 21:22:16,330 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:16,337 p=9825 u=zubeq n=ansible | TASK [backup : Setup daily backup cron job] ******************************************************************
+2025-11-14 21:22:18,684 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:18,690 p=9825 u=zubeq n=ansible | TASK [backup : Create initial test backup] *******************************************************************
+2025-11-14 21:22:21,177 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:21,183 p=9825 u=zubeq n=ansible | TASK [backup : Show backup result] ***************************************************************************
+2025-11-14 21:22:21,215 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - '[2025-11-14 19:22:20] ========================================='
+  - '[2025-11-14 19:22:20] Starting PostgreSQL backup'
+  - '[2025-11-14 19:22:20] ========================================='
+  - '[2025-11-14 19:22:20] ❌ ERROR: PostgreSQL container ''postgres_db'' is not running!'
+2025-11-14 21:22:21,219 p=9825 u=zubeq n=ansible | TASK [backup : List created backups] *************************************************************************
+2025-11-14 21:22:24,247 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:24,251 p=9825 u=zubeq n=ansible | TASK [backup : Show backup files info] ***********************************************************************
+2025-11-14 21:22:24,287 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - ✅ Backup system configured
+  - 'Backup directory: /home/ec2-user/backups'
+  - 'Schedule: Daily at 16:50'
+  - 'Retention: 7 days'
+  - Found 0 backup file(s)
+  - 'Manual backup: /home/ec2-user/backup-postgres.sh'
+  - 'Restore: /home/ec2-user/restore-postgres.sh <backup_file>'
+2025-11-14 21:22:24,296 p=9825 u=zubeq n=ansible | TASK [Wait for services to start] ****************************************************************************
+2025-11-14 21:22:24,305 p=9825 u=zubeq n=ansible | Pausing for 30 seconds
+2025-11-14 21:22:24,305 p=9825 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-14 21:22:24,305 p=9825 u=zubeq n=ansible | [Wait for services to start]
+Waiting for all services to initialize...:
+2025-11-14 21:22:54,313 p=9825 u=zubeq n=ansible | ok: [3.127.255.249]
+2025-11-14 21:22:54,320 p=9825 u=zubeq n=ansible | TASK [Check running containers] ******************************************************************************
+2025-11-14 21:22:57,001 p=9825 u=zubeq n=ansible | changed: [3.127.255.249]
+2025-11-14 21:22:57,008 p=9825 u=zubeq n=ansible | TASK [Show container status] *********************************************************************************
+2025-11-14 21:22:57,023 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - NAMES               STATUS                                 PORTS
+  - grafana             Up About a minute (healthy)            0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
+  - postgres_exporter   Up About a minute (healthy)            0.0.0.0:9187->9187/tcp, :::9187->9187/tcp
+  - 'promtail            Up About a minute (health: starting)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp'
+  - web_app             Up About a minute (healthy)            0.0.0.0:5000->5000/tcp, :::5000->5000/tcp
+  - loki                Up About a minute (healthy)            0.0.0.0:3100->3100/tcp, :::3100->3100/tcp
+  - node_exporter       Up About a minute (healthy)            0.0.0.0:9100->9100/tcp, :::9100->9100/tcp
+  - alertmanager        Up About a minute (healthy)            0.0.0.0:9093->9093/tcp, :::9093->9093/tcp
+  - cadvisor_exporter   Up About a minute (healthy)            0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
+  - postgres_db         Up About a minute (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+  - prometheus          Up About a minute (healthy)            0.0.0.0:9090->9090/tcp, :::9090->9090/tcp
+2025-11-14 21:22:57,027 p=9825 u=zubeq n=ansible | TASK [Show service URLs] *************************************************************************************
+2025-11-14 21:22:57,043 p=9825 u=zubeq n=ansible | ok: [3.127.255.249] => 
+  msg:
+  - =========================================
+  - ✅ Deployment completed successfully!
+  - =========================================
+  - 'Flask App:      http://3.127.255.249:5000'
+  - 'Prometheus:     http://3.127.255.249:9090'
+  - 'Grafana:        http://3.127.255.249:3000 (admin/admin)'
+  - 'Alertmanager:   http://3.127.255.249:9093'
+  - 'Loki:           http://3.127.255.249:3100'
+  - =========================================
+  - "\U0001F4CA Grafana Dashboards to import:"
+  - '  - 11098 (Prometheus Alertmanager)'
+  - '  - 13639 (Loki Dashboard)'
+  - '  - 1860  (Node Exporter Full)'
+  - '  - 14282 (CAdvisor Exporter)'
+  - '  - 12485 PostgreSQL exporter'
+  - =========================================
+2025-11-14 21:22:57,050 p=9825 u=zubeq n=ansible | PLAY RECAP ***************************************************************************************************
+2025-11-14 21:22:57,050 p=9825 u=zubeq n=ansible | 3.127.255.249              : ok=37   changed=5    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-11-16 13:49:19,783 p=13422 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] ******************************
+2025-11-16 13:49:19,795 p=13422 u=zubeq n=ansible | TASK [Gathering Facts] ************************************************************************
+2025-11-16 13:49:24,244 p=13422 u=zubeq n=ansible | [WARNING]: Platform linux on host 3.121.22.34 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-
+core/2.16/reference_appendices/interpreter_discovery.html for more information.
+
+2025-11-16 13:49:24,244 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:49:24,260 p=13422 u=zubeq n=ansible | TASK [docker : Install Docker engine] *********************************************************
+2025-11-16 13:50:20,381 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:20,386 p=13422 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] ***********************************************
+2025-11-16 13:50:25,106 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:25,108 p=13422 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ************************************
+2025-11-16 13:50:28,551 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:28,558 p=13422 u=zubeq n=ansible | TASK [app : Create application directory] *****************************************************
+2025-11-16 13:50:30,446 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:30,455 p=13422 u=zubeq n=ansible | TASK [app : Copy Flask app files] *************************************************************
+2025-11-16 13:50:41,401 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:41,407 p=13422 u=zubeq n=ansible | TASK [app : Copy Dockerfile] ******************************************************************
+2025-11-16 13:50:44,611 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:50:44,621 p=13422 u=zubeq n=ansible | TASK [app : Template prometheus.yml] **********************************************************
+2025-11-16 13:50:47,947 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:47,952 p=13422 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] ******************************************************
+2025-11-16 13:50:51,415 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:51,419 p=13422 u=zubeq n=ansible | TASK [app : Create alertmanager directory] ****************************************************
+2025-11-16 13:50:52,991 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:52,997 p=13422 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ********************************************************
+2025-11-16 13:50:56,442 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:56,449 p=13422 u=zubeq n=ansible | TASK [app : Create alerts directory] **********************************************************
+2025-11-16 13:50:58,027 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:50:58,031 p=13422 u=zubeq n=ansible | TASK [app : Template alert rules] *************************************************************
+2025-11-16 13:51:01,981 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:01,987 p=13422 u=zubeq n=ansible | TASK [app : Create loki directory] ************************************************************
+2025-11-16 13:51:04,619 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:04,623 p=13422 u=zubeq n=ansible | TASK [app : Template loki config] *************************************************************
+2025-11-16 13:51:07,998 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:08,005 p=13422 u=zubeq n=ansible | TASK [app : Create promtail directory] ********************************************************
+2025-11-16 13:51:09,532 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:09,541 p=13422 u=zubeq n=ansible | TASK [app : Template promtail config] *********************************************************
+2025-11-16 13:51:12,715 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:12,729 p=13422 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] *******************************************************
+2025-11-16 13:51:50,226 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:51:50,234 p=13422 u=zubeq n=ansible | TASK [app : Show docker-compose output] *******************************************************
+2025-11-16 13:51:50,245 p=13422 u=zubeq n=ansible | skipping: [3.121.22.34]
+2025-11-16 13:51:50,250 p=13422 u=zubeq n=ansible | TASK [app : Wait for containers to be healthy] ************************************************
+2025-11-16 13:51:50,260 p=13422 u=zubeq n=ansible | Pausing for 10 seconds
+2025-11-16 13:51:50,260 p=13422 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-16 13:51:50,260 p=13422 u=zubeq n=ansible | [app : Wait for containers to be healthy]
+Waiting for containers to start...:
+2025-11-16 13:52:00,267 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:52:00,271 p=13422 u=zubeq n=ansible | TASK [app : Check running containers] *********************************************************
+2025-11-16 13:52:04,113 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:04,118 p=13422 u=zubeq n=ansible | TASK [app : Show container status] ************************************************************
+2025-11-16 13:52:04,133 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - NAMES               STATUS                             PORTS
+  - 'promtail            Up 14 seconds (health: starting)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp'
+  - 'postgres_exporter   Up 14 seconds (health: starting)   0.0.0.0:9187->9187/tcp, :::9187->9187/tcp'
+  - 'grafana             Up 14 seconds (health: starting)   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp'
+  - 'web_app             Up 14 seconds (health: starting)   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp'
+  - 'loki                Up 16 seconds (health: starting)   0.0.0.0:3100->3100/tcp, :::3100->3100/tcp'
+  - 'prometheus          Up 15 seconds (health: starting)   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp'
+  - 'cadvisor_exporter   Up 15 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp'
+  - 'node_exporter       Up 15 seconds (health: starting)   0.0.0.0:9100->9100/tcp, :::9100->9100/tcp'
+  - 'alertmanager        Up 15 seconds (health: starting)   0.0.0.0:9093->9093/tcp, :::9093->9093/tcp'
+  - postgres_db         Up 15 seconds (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+2025-11-16 13:52:04,137 p=13422 u=zubeq n=ansible | TASK [app : Check Flask application health] ***************************************************
+2025-11-16 13:52:06,635 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:52:06,640 p=13422 u=zubeq n=ansible | TASK [app : Show Flask health check result] ***************************************************
+2025-11-16 13:52:06,654 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg: Flask application is UP ✅
+2025-11-16 13:52:06,661 p=13422 u=zubeq n=ansible | TASK [loki : Show Loki info] ******************************************************************
+2025-11-16 13:52:06,673 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - ✅ Loki logging stack configured
+  - Loki will store logs for 7 days
+  - Access Loki via Grafana Explore
+2025-11-16 13:52:06,684 p=13422 u=zubeq n=ansible | TASK [backup : Install cronie package on Amazon Linux 2023] ***********************************
+2025-11-16 13:52:13,075 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:13,079 p=13422 u=zubeq n=ansible | TASK [backup : Create backup directory] *******************************************************
+2025-11-16 13:52:15,065 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:15,071 p=13422 u=zubeq n=ansible | TASK [backup : Template backup script] ********************************************************
+2025-11-16 13:52:18,871 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:18,877 p=13422 u=zubeq n=ansible | TASK [backup : Template restore script] *******************************************************
+2025-11-16 13:52:23,043 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:23,047 p=13422 u=zubeq n=ansible | TASK [backup : Setup daily backup cron job] ***************************************************
+2025-11-16 13:52:24,916 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:24,921 p=13422 u=zubeq n=ansible | TASK [backup : Create initial test backup] ****************************************************
+2025-11-16 13:52:27,028 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:52:27,034 p=13422 u=zubeq n=ansible | TASK [backup : Show backup result] ************************************************************
+2025-11-16 13:52:27,071 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - '[2025-11-16 11:52:26] ========================================='
+  - '[2025-11-16 11:52:26] Starting PostgreSQL backup'
+  - '[2025-11-16 11:52:26] ========================================='
+  - '[2025-11-16 11:52:26] ❌ ERROR: PostgreSQL container ''postgres_db'' is not running!'
+2025-11-16 13:52:27,075 p=13422 u=zubeq n=ansible | TASK [backup : List created backups] **********************************************************
+2025-11-16 13:52:28,861 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:52:28,866 p=13422 u=zubeq n=ansible | TASK [backup : Show backup files info] ********************************************************
+2025-11-16 13:52:28,898 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - ✅ Backup system configured
+  - 'Backup directory: /home/ec2-user/backups'
+  - 'Schedule: Daily at 16:50'
+  - 'Retention: 7 days'
+  - Found 0 backup file(s)
+  - 'Manual backup: /home/ec2-user/backup-postgres.sh'
+  - 'Restore: /home/ec2-user/restore-postgres.sh <backup_file>'
+2025-11-16 13:52:28,911 p=13422 u=zubeq n=ansible | RUNNING HANDLER [app : Restart prometheus container] ******************************************
+2025-11-16 13:52:33,702 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:33,707 p=13422 u=zubeq n=ansible | RUNNING HANDLER [app : Restart compose stack] *************************************************
+2025-11-16 13:52:49,967 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:52:49,974 p=13422 u=zubeq n=ansible | TASK [Wait for services to start] *************************************************************
+2025-11-16 13:52:49,984 p=13422 u=zubeq n=ansible | Pausing for 30 seconds
+2025-11-16 13:52:49,984 p=13422 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-16 13:52:49,984 p=13422 u=zubeq n=ansible | [Wait for services to start]
+Waiting for all services to initialize...:
+2025-11-16 13:53:19,990 p=13422 u=zubeq n=ansible | ok: [3.121.22.34]
+2025-11-16 13:53:19,997 p=13422 u=zubeq n=ansible | TASK [Check running containers] ***************************************************************
+2025-11-16 13:53:22,583 p=13422 u=zubeq n=ansible | changed: [3.121.22.34]
+2025-11-16 13:53:22,588 p=13422 u=zubeq n=ansible | TASK [Show container status] ******************************************************************
+2025-11-16 13:53:22,602 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - NAMES               STATUS                          PORTS
+  - web_app             Up 32 seconds (healthy)         0.0.0.0:5000->5000/tcp, :::5000->5000/tcp
+  - promtail            Up About a minute (unhealthy)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp
+  - postgres_exporter   Up About a minute (healthy)     0.0.0.0:9187->9187/tcp, :::9187->9187/tcp
+  - grafana             Up About a minute (healthy)     0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
+  - loki                Up About a minute (healthy)     0.0.0.0:3100->3100/tcp, :::3100->3100/tcp
+  - prometheus          Up 48 seconds (healthy)         0.0.0.0:9090->9090/tcp, :::9090->9090/tcp
+  - cadvisor_exporter   Up About a minute (healthy)     0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
+  - node_exporter       Up About a minute (healthy)     0.0.0.0:9100->9100/tcp, :::9100->9100/tcp
+  - alertmanager        Up About a minute (healthy)     0.0.0.0:9093->9093/tcp, :::9093->9093/tcp
+  - postgres_db         Up About a minute (healthy)     0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+2025-11-16 13:53:22,606 p=13422 u=zubeq n=ansible | TASK [Show service URLs] **********************************************************************
+2025-11-16 13:53:22,621 p=13422 u=zubeq n=ansible | ok: [3.121.22.34] => 
+  msg:
+  - =========================================
+  - ✅ Deployment completed successfully!
+  - =========================================
+  - 'Flask App:      http://3.121.22.34:5000'
+  - 'Prometheus:     http://3.121.22.34:9090'
+  - 'Grafana:        http://3.121.22.34:3000 (admin/admin)'
+  - 'Alertmanager:   http://3.121.22.34:9093'
+  - 'Loki:           http://3.121.22.34:3100'
+  - =========================================
+  - "\U0001F4CA Grafana Dashboards to import:"
+  - '  - 11098 (Prometheus Alertmanager)'
+  - '  - 13639 (Loki Dashboard)'
+  - '  - 1860  (Node Exporter Full)'
+  - '  - 14282 (CAdvisor Exporter)'
+  - '  - 12485 PostgreSQL exporter'
+  - =========================================
+2025-11-16 13:53:22,628 p=13422 u=zubeq n=ansible | PLAY RECAP ************************************************************************************
+2025-11-16 13:53:22,628 p=13422 u=zubeq n=ansible | 3.121.22.34                : ok=39   changed=25   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-11-17 19:03:52,544 p=5722 u=zubeq n=ansible | PLAY [Deploy Flask + PostgreSQL + Monitoring + Logging + Backup] ******************************
+2025-11-17 19:03:52,558 p=5722 u=zubeq n=ansible | TASK [Gathering Facts] ************************************************************************
+2025-11-17 19:03:58,778 p=5722 u=zubeq n=ansible | [WARNING]: Platform linux on host 3.79.240.94 is using the discovered Python interpreter at
+/usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-
+core/2.16/reference_appendices/interpreter_discovery.html for more information.
+
+2025-11-17 19:03:58,778 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:03:58,789 p=5722 u=zubeq n=ansible | TASK [docker : Install Docker engine] *********************************************************
+2025-11-17 19:04:48,611 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:04:48,616 p=5722 u=zubeq n=ansible | TASK [docker : Enable and start Docker service] ***********************************************
+2025-11-17 19:04:53,687 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:04:53,692 p=5722 u=zubeq n=ansible | TASK [docker : Install docker-compose (standalone binary)] ************************************
+2025-11-17 19:04:57,360 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:04:57,369 p=5722 u=zubeq n=ansible | TASK [app : Create application directory] *****************************************************
+2025-11-17 19:05:00,157 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:00,165 p=5722 u=zubeq n=ansible | TASK [app : Copy Flask app files] *************************************************************
+2025-11-17 19:05:17,236 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:17,240 p=5722 u=zubeq n=ansible | TASK [app : Copy Dockerfile] ******************************************************************
+2025-11-17 19:05:21,120 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:05:21,128 p=5722 u=zubeq n=ansible | TASK [app : Template prometheus.yml] **********************************************************
+2025-11-17 19:05:26,104 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:26,110 p=5722 u=zubeq n=ansible | TASK [app : Template docker-compose.yml] ******************************************************
+2025-11-17 19:05:30,214 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:30,220 p=5722 u=zubeq n=ansible | TASK [app : Create alertmanager directory] ****************************************************
+2025-11-17 19:05:32,065 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:32,071 p=5722 u=zubeq n=ansible | TASK [app : Template alertmanager.yml] ********************************************************
+2025-11-17 19:05:36,015 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:36,021 p=5722 u=zubeq n=ansible | TASK [app : Create alerts directory] **********************************************************
+2025-11-17 19:05:38,078 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:38,085 p=5722 u=zubeq n=ansible | TASK [app : Template alert rules] *************************************************************
+2025-11-17 19:05:42,843 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:42,848 p=5722 u=zubeq n=ansible | TASK [app : Create loki directory] ************************************************************
+2025-11-17 19:05:46,870 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:46,877 p=5722 u=zubeq n=ansible | TASK [app : Template loki config] *************************************************************
+2025-11-17 19:05:54,240 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:54,245 p=5722 u=zubeq n=ansible | TASK [app : Create promtail directory] ********************************************************
+2025-11-17 19:05:57,279 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:05:57,287 p=5722 u=zubeq n=ansible | TASK [app : Template promtail config] *********************************************************
+2025-11-17 19:06:03,518 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:06:03,530 p=5722 u=zubeq n=ansible | TASK [app : Start Docker Compose stack] *******************************************************
+2025-11-17 19:06:40,018 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:06:40,028 p=5722 u=zubeq n=ansible | TASK [app : Show docker-compose output] *******************************************************
+2025-11-17 19:06:40,039 p=5722 u=zubeq n=ansible | skipping: [3.79.240.94]
+2025-11-17 19:06:40,043 p=5722 u=zubeq n=ansible | TASK [app : Wait for containers to be healthy] ************************************************
+2025-11-17 19:06:40,053 p=5722 u=zubeq n=ansible | Pausing for 10 seconds
+2025-11-17 19:06:40,054 p=5722 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-17 19:06:40,054 p=5722 u=zubeq n=ansible | [app : Wait for containers to be healthy]
+Waiting for containers to start...:
+2025-11-17 19:06:50,060 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:06:50,067 p=5722 u=zubeq n=ansible | TASK [app : Check running containers] *********************************************************
+2025-11-17 19:06:52,370 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:06:52,377 p=5722 u=zubeq n=ansible | TASK [app : Show container status] ************************************************************
+2025-11-17 19:06:52,390 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - NAMES               STATUS                             PORTS
+  - 'grafana             Up 12 seconds (health: starting)   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp'
+  - 'promtail            Up 13 seconds (health: starting)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp'
+  - 'postgres_exporter   Up 12 seconds (health: starting)   0.0.0.0:9187->9187/tcp, :::9187->9187/tcp'
+  - 'web_app             Up 12 seconds (health: starting)   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp'
+  - 'cadvisor_exporter   Up 14 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp'
+  - 'node_exporter       Up 13 seconds (health: starting)   0.0.0.0:9100->9100/tcp, :::9100->9100/tcp'
+  - 'alertmanager        Up 13 seconds (health: starting)   0.0.0.0:9093->9093/tcp, :::9093->9093/tcp'
+  - 'loki                Up 14 seconds (health: starting)   0.0.0.0:3100->3100/tcp, :::3100->3100/tcp'
+  - postgres_db         Up 13 seconds (healthy)            0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+  - 'prometheus          Up 14 seconds (health: starting)   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp'
+2025-11-17 19:06:52,397 p=5722 u=zubeq n=ansible | TASK [app : Check Flask application health] ***************************************************
+2025-11-17 19:06:55,716 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:06:55,721 p=5722 u=zubeq n=ansible | TASK [app : Show Flask health check result] ***************************************************
+2025-11-17 19:06:55,738 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg: Flask application is UP ✅
+2025-11-17 19:06:55,745 p=5722 u=zubeq n=ansible | TASK [loki : Show Loki info] ******************************************************************
+2025-11-17 19:06:55,758 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - ✅ Loki logging stack configured
+  - Loki will store logs for 7 days
+  - Access Loki via Grafana Explore
+2025-11-17 19:06:55,766 p=5722 u=zubeq n=ansible | TASK [backup : Install cronie package on Amazon Linux 2023] ***********************************
+2025-11-17 19:07:00,170 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:00,175 p=5722 u=zubeq n=ansible | TASK [backup : Create backup directory] *******************************************************
+2025-11-17 19:07:02,867 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:02,872 p=5722 u=zubeq n=ansible | TASK [backup : Template backup script] ********************************************************
+2025-11-17 19:07:07,732 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:07,737 p=5722 u=zubeq n=ansible | TASK [backup : Template restore script] *******************************************************
+2025-11-17 19:07:13,332 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:13,337 p=5722 u=zubeq n=ansible | TASK [backup : Setup daily backup cron job] ***************************************************
+2025-11-17 19:07:15,918 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:15,922 p=5722 u=zubeq n=ansible | TASK [backup : Create initial test backup] ****************************************************
+2025-11-17 19:07:18,385 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:07:18,388 p=5722 u=zubeq n=ansible | TASK [backup : Show backup result] ************************************************************
+2025-11-17 19:07:18,422 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - '[2025-11-17 17:07:18] ========================================='
+  - '[2025-11-17 17:07:18] Starting PostgreSQL backup'
+  - '[2025-11-17 17:07:18] ========================================='
+  - '[2025-11-17 17:07:18] ❌ ERROR: PostgreSQL container ''postgres_db'' is not running!'
+2025-11-17 19:07:18,425 p=5722 u=zubeq n=ansible | TASK [backup : List created backups] **********************************************************
+2025-11-17 19:07:20,563 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:07:20,568 p=5722 u=zubeq n=ansible | TASK [backup : Show backup files info] ********************************************************
+2025-11-17 19:07:20,600 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - ✅ Backup system configured
+  - 'Backup directory: /home/ec2-user/backups'
+  - 'Schedule: Daily at 16:50'
+  - 'Retention: 7 days'
+  - Found 0 backup file(s)
+  - 'Manual backup: /home/ec2-user/backup-postgres.sh'
+  - 'Restore: /home/ec2-user/restore-postgres.sh <backup_file>'
+2025-11-17 19:07:20,613 p=5722 u=zubeq n=ansible | RUNNING HANDLER [app : Restart prometheus container] ******************************************
+2025-11-17 19:07:25,275 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:25,280 p=5722 u=zubeq n=ansible | RUNNING HANDLER [app : Restart compose stack] *************************************************
+2025-11-17 19:07:38,844 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:07:38,849 p=5722 u=zubeq n=ansible | TASK [Wait for services to start] *************************************************************
+2025-11-17 19:07:38,859 p=5722 u=zubeq n=ansible | Pausing for 30 seconds
+2025-11-17 19:07:38,859 p=5722 u=zubeq n=ansible | (ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+2025-11-17 19:07:38,860 p=5722 u=zubeq n=ansible | [Wait for services to start]
+Waiting for all services to initialize...:
+2025-11-17 19:08:08,867 p=5722 u=zubeq n=ansible | ok: [3.79.240.94]
+2025-11-17 19:08:08,872 p=5722 u=zubeq n=ansible | TASK [Check running containers] ***************************************************************
+2025-11-17 19:08:10,869 p=5722 u=zubeq n=ansible | changed: [3.79.240.94]
+2025-11-17 19:08:10,875 p=5722 u=zubeq n=ansible | TASK [Show container status] ******************************************************************
+2025-11-17 19:08:10,890 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - NAMES               STATUS                          PORTS
+  - web_app             Up 32 seconds (healthy)         0.0.0.0:5000->5000/tcp, :::5000->5000/tcp
+  - grafana             Up About a minute (healthy)     0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
+  - promtail            Up About a minute (unhealthy)   0.0.0.0:9080->9080/tcp, :::9080->9080/tcp
+  - postgres_exporter   Up About a minute (healthy)     0.0.0.0:9187->9187/tcp, :::9187->9187/tcp
+  - cadvisor_exporter   Up About a minute (healthy)     0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
+  - node_exporter       Up About a minute (healthy)     0.0.0.0:9100->9100/tcp, :::9100->9100/tcp
+  - alertmanager        Up About a minute (healthy)     0.0.0.0:9093->9093/tcp, :::9093->9093/tcp
+  - loki                Up About a minute (healthy)     0.0.0.0:3100->3100/tcp, :::3100->3100/tcp
+  - postgres_db         Up About a minute (healthy)     0.0.0.0:5432->5432/tcp, :::5432->5432/tcp
+  - prometheus          Up 45 seconds (healthy)         0.0.0.0:9090->9090/tcp, :::9090->9090/tcp
+2025-11-17 19:08:10,893 p=5722 u=zubeq n=ansible | TASK [Show service URLs] **********************************************************************
+2025-11-17 19:08:10,909 p=5722 u=zubeq n=ansible | ok: [3.79.240.94] => 
+  msg:
+  - =========================================
+  - ✅ Deployment completed successfully!
+  - =========================================
+  - 'Flask App:      http://3.79.240.94:5000'
+  - 'Prometheus:     http://3.79.240.94:9090'
+  - 'Grafana:        http://3.79.240.94:3000 (admin/admin)'
+  - 'Alertmanager:   http://3.79.240.94:9093'
+  - 'Loki:           http://3.79.240.94:3100'
+  - =========================================
+  - "\U0001F4CA Grafana Dashboards to import:"
+  - '  - 11098 (Prometheus Alertmanager)'
+  - '  - 13639 (Loki Dashboard)'
+  - '  - 1860  (Node Exporter Full)'
+  - '  - 14282 (CAdvisor Exporter)'
+  - '  - 12485 PostgreSQL exporter'
+  - =========================================
+2025-11-17 19:08:10,916 p=5722 u=zubeq n=ansible | PLAY RECAP ************************************************************************************
+2025-11-17 19:08:10,916 p=5722 u=zubeq n=ansible | 3.79.240.94                : ok=39   changed=25   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   

@@ -2,8 +2,10 @@
 # PROMTAIL CONFIGURATION
 # ========================================
 server:
-  http_listen_port: 9080
+  http_listen_port: {{ promtail_port }}
   grpc_listen_port: 0
+positions:
+  filename: /positions/positions.yaml  # ← Меняем путь с /var/log на /positions
 {% raw %}
 # Куда отправлять логи
 clients:

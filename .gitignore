@@ -9,6 +9,8 @@
 *.retry
 group_vars/vault.yml
 inventory.ini
+*.log
+ansible/*.log
 
 # SSH Keys
 *.pem
